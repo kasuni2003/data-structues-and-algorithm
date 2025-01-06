@@ -1,0 +1,108 @@
+// Node class to represent each element in the stack
+class Node<T> {
+    T data;
+    Node<T> next;
+
+    // Constructor to create a new node with given data
+    public Node(T data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+// Stack implementation using a linked list
+public class LinkedListStack<T> {
+    private Node<T> head; // Head of the stack
+
+    // Constructor to create an empty stack
+    public LinkedListStack() {
+        this.head = null;
+    }
+
+    // Method to push an element onto the stack
+    public void push(T data) {
+        Node<T> newNode = new Node<>(data);
+        newNode.next = head; // The new node points to the current head
+        head = newNode;      // Update head to be the new node
+        System.out.println("Pushed element: " + data);
+    }
+
+    // Method to pop an element from the stack
+    public T pop() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty. Cannot pop element.");
+            return null;
+        }
+        T data = head.data;
+        head = head.next; // Update head to be the next node
+        System.out.println("Popped element: " + data);
+        return data;
+    }
+
+    // Method to peek at the top element of the stack without removing it
+    public T peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty. Cannot peek element.");
+            return null;
+        }
+        return head.data;
+    }
+
+    // Method to check if the stack is empty
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    // Method to print the elements of the stack
+    public void printStack() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty.");
+        } else {
+            Node<T> current = head;
+            System.out.print("Stack elements: ");
+            while (current != null) {
+                System.out.print(current.data + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+
+    // Main method for testing the stack implementation
+    public static void main(String[] args) {
+        LinkedListStack<Integer> stack = new LinkedListStack<>();
+
+        // Push elements onto the stack
+        stack.push(10);
+        stack.push(15);
+        stack.push(20);
+
+        // Print stack elements
+        System.out.println("Stack after pushes:");
+        stack.printStack();
+
+        // Peek at the top element
+        System.out.println("Top element: " + stack.peek());
+
+        // Pop an element from the stack
+        stack.pop();
+
+        // Print stack elements after pop
+        System.out.println("Stack after pop:");
+        stack.printStack();
+
+        // Peek at the top element
+        System.out.println("Top element: " + stack.peek());
+
+        // Pop remaining elements
+        stack.pop();
+        stack.pop();
+
+        // Try to pop from an empty stack
+        stack.pop();
+
+        // Print stack elements after all pops
+        System.out.println("Stack after popping all elements:");
+        stack.printStack();
+    }
+}

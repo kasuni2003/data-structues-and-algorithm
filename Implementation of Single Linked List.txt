@@ -1,0 +1,130 @@
+import java.util.Scanner;
+
+// Node class representing a node in the singly linked list
+class Node<T> {
+    T data;
+    Node<T> next;
+
+    // Constructor to create a new node
+    public Node(T data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+// SinglyLinkedList class implementing a singly linked list
+public class SinglyLinkedList<T> {
+    private Node<T> head;
+
+    // Constructor to create an empty linked list
+    public SinglyLinkedList() {
+        this.head = null;
+    }
+
+    // Method to add an element at the beginning of the list
+    public void insertFirst(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            newNode.next = head;
+            head = newNode;
+        }
+        System.out.println("Added element: " + data);
+    }
+
+    // Method to delete the first occurrence of an element
+    public boolean delete(T data) {
+        if (head == null) {
+            System.out.println("Element not found: " + data);
+            return false;
+        }
+        if (head.data.equals(data)) {
+            head = head.next;
+            System.out.println("Deleted element: " + data);
+            return true;
+        }
+        Node<T> prev = null;
+        Node<T> current = head;
+        while (current != null && !current.data.equals(data)) {
+            prev = current;
+            current = current.next;
+        }
+        if (current == null) {
+            System.out.println("Element not found: " + data);
+            return false;
+        }
+        prev.next = current.next;
+        System.out.println("Deleted element: " + data);
+        return true;
+    }
+
+    // Method to search for an element in the list
+    public boolean search(T data) {
+        Node<T> current = head;
+        while (current != null && !current.data.equals(data)) {
+            current = current.next;
+        }
+        if (current != null) {
+            System.out.println("Element found: " + data);
+            return true;
+        }
+        System.out.println("Element not found: " + data);
+        return false;
+    }
+
+    // Method to print the elements of the list
+    public void printList() {
+        if (head == null) {
+            System.out.println("List is empty.");
+        } else {
+            Node<T> current = head;
+            while (current != null) {
+                System.out.print(current.data + " -> ");
+                current = current.next;
+            }
+            System.out.println("null");
+        }
+    }
+
+    // Main method for testing the linked list implementation
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        SinglyLinkedList<Integer> list = new SinglyLinkedList<>();
+
+        // Populate the list with some initial elements
+        list.insertFirst(20);
+        list.insertFirst(15);
+        list.insertFirst(10);
+
+        // Print the initial list
+        System.out.println("Initial list:");
+        list.printList();
+
+        // Adding an element at the beginning
+        System.out.print("Enter element you want to insert at the beginning: ");
+        int addElement = scanner.nextInt();
+        list.insertFirst(addElement);
+
+        // Print the list after insertion
+        System.out.println("List after insertion:");
+        list.printList();
+
+        // Deleting an element
+        System.out.print("Enter element you want to delete: ");
+        int deleteElement = scanner.nextInt();
+        list.delete(deleteElement);
+
+        // Print the list after deletion
+        System.out.println("List after deletion:");
+        list.printList();
+
+        // Searching for an element
+        System.out.print("Enter element you want to search: ");
+        int searchElement = scanner.nextInt();
+        boolean found = list.search(searchElement);
+        System.out.println("Search result for element " + searchElement + ": " + found);
+
+        scanner.close();
+    }
+}
