@@ -1,0 +1,143 @@
+import java.util.Arrays;
+
+public class MinHeapPriorityQueue {
+
+    private int[] heap; // Array to store the heap
+    private int size;   // Current number of elements in the heap
+    private int capacity; // Maximum capacity of the heap
+
+    // Constructor to initialize the heap
+    public MinHeapPriorityQueue(int capacity) {
+        this.capacity = capacity;
+        this.size = 0;
+        this.heap = new int[capacity];
+    }
+
+    // Get the index of the parent node
+    private int parent(int index) {
+        return (index - 1) / 2;
+    }
+
+    // Get the index of the left child node
+    private int leftChild(int index) {
+        return 2 * index + 1;
+    }
+
+    // Get the index of the right child node
+    private int rightChild(int index) {
+        return 2 * index + 2;
+    }
+
+    // Swap two elements in the heap
+    private void swap(int i, int j) {
+        int temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+
+    // Insert a new element into the heap
+    public void insert(int value) {
+        if (size == capacity) {
+            throw new IllegalStateException("Heap is full");
+        }
+
+        // Add the new element to the end of the heap
+        heap[size] = value;
+        size++;
+
+        // Heapify up to maintain the heap property
+        heapifyUp(size - 1);
+    }
+
+    // Heapify up to maintain the heap property
+    private void heapifyUp(int index) {
+        while (index > 0 && heap[index] < heap[parent(index)]) {
+            swap(index, parent(index));
+            index = parent(index);
+        }
+    }
+
+    // Extract the minimum element (root) from the heap
+    public int extractMin() {
+        if (size == 0) {
+            throw new IllegalStateException("Heap is empty");
+        }
+
+        // The minimum element is at the root
+        int min = heap[0];
+
+        // Replace the root with the last element
+        heap[0] = heap[size - 1];
+        size--;
+
+        // Heapify down to maintain the heap property
+        heapifyDown(0);
+
+        return min;
+    }
+
+    // Heapify down to maintain the heap property
+    private void heapifyDown(int index) {
+        int smallest = index;
+        int left = leftChild(index);
+        int right = rightChild(index);
+
+        // Find the smallest element among the current node and its children
+        if (left < size && heap[left] < heap[smallest]) {
+            smallest = left;
+        }
+        if (right < size && heap[right] < heap[smallest]) {
+            smallest = right;
+        }
+
+        // If the smallest element is not the current node, swap and continue heapifying down
+        if (smallest != index) {
+            swap(index, smallest);
+            heapifyDown(smallest);
+        }
+    }
+
+    // Get the minimum element without removing it
+    public int peek() {
+        if (size == 0) {
+            throw new IllegalStateException("Heap is empty");
+        }
+        return heap[0];
+    }
+
+    // Check if the heap is empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Print the heap (for debugging purposes)
+    public void printHeap() {
+        System.out.println(Arrays.toString(Arrays.copyOf(heap, size)));
+    }
+
+    // Main method to test the implementation
+    public static void main(String[] args) {
+        MinHeapPriorityQueue pq = new MinHeapPriorityQueue(10);
+
+        // Insert elements into the priority queue
+        pq.insert(10);
+        pq.insert(5);
+        pq.insert(20);
+        pq.insert(3);
+        pq.insert(8);
+
+        System.out.println("Heap after insertions:");
+        pq.printHeap();
+
+        // Extract the minimum element
+        System.out.println("Extracted min: " + pq.extractMin());
+        System.out.println("Heap after extraction:");
+        pq.printHeap();
+
+        // Peek the minimum element
+        System.out.println("Peek min: " + pq.peek());
+
+        // Check if the heap is empty
+        System.out.println("Is heap empty? " + pq.isEmpty());
+    }
+}
