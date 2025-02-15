@@ -1,0 +1,129 @@
+
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    // Constructor to initialize a node
+    public Node(int data) {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+// Tree class to manage the tree structure
+class BinaryTree {
+    Node root;
+
+    // Constructor to initialize an empty tree
+    public BinaryTree() {
+        this.root = null;
+    }
+
+    // Method to insert a new node in the tree
+    public void insert(int data) {
+        root = insertRecursive(root, data);
+    }
+
+    // Recursive helper method to insert a node
+    private Node insertRecursive(Node current, int data) {
+        // If the current node is null, create a new node
+        if (current == null) {
+            return new Node(data);
+        }
+
+        // Otherwise, recur down the tree
+        if (data < current.data) {
+            current.left = insertRecursive(current.left, data);
+        } else if (data > current.data) {
+            current.right = insertRecursive(current.right, data);
+        }
+
+        // Return the unchanged node
+        return current;
+    }
+
+    // Method to perform in-order traversal (Left -> Root -> Right)
+    public void inOrderTraversal(Node node) {
+        if (node != null) {
+            inOrderTraversal(node.left);
+            System.out.print(node.data + " ");
+            inOrderTraversal(node.right);
+        }
+    }
+
+    // Method to perform pre-order traversal (Root -> Left -> Right)
+    public void preOrderTraversal(Node node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preOrderTraversal(node.left);
+            preOrderTraversal(node.right);
+        }
+    }
+
+    // Method to perform post-order traversal (Left -> Right -> Root)
+    public void postOrderTraversal(Node node) {
+        if (node != null) {
+            postOrderTraversal(node.left);
+            postOrderTraversal(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    // Method to search for a value in the tree
+    public boolean search(int data) {
+        return searchRecursive(root, data);
+    }
+
+    // Recursive helper method to search for a value
+    private boolean searchRecursive(Node current, int data) {
+        // Base case: current node is null (value not found)
+        if (current == null) {
+            return false;
+        }
+
+        // If the value is found
+        if (data == current.data) {
+            return true;
+        }
+
+        // Recur down the tree
+        return data < current.data
+                ? searchRecursive(current.left, data)
+                : searchRecursive(current.right, data);
+    }
+}
+
+// Main class to test the BinaryTree implementation
+public class Main {
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+
+        // Insert nodes into the tree
+        tree.insert(50);
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(40);
+        tree.insert(70);
+        tree.insert(60);
+        tree.insert(80);
+
+        // Perform traversals
+        System.out.println("In-Order Traversal:");
+        tree.inOrderTraversal(tree.root);
+        System.out.println();
+
+        System.out.println("Pre-Order Traversal:");
+        tree.preOrderTraversal(tree.root);
+        System.out.println();
+
+        System.out.println("Post-Order Traversal:");
+        tree.postOrderTraversal(tree.root);
+        System.out.println();
+
+        // Search for a value in the tree
+        int searchValue = 60;
+        System.out.println("Is " + searchValue + " present in the tree? " + tree.search(searchValue));
+    }
+}
