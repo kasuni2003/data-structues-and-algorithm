@@ -1,0 +1,117 @@
+import java.util.*;
+
+public class PrimsAlgorithm {
+
+    // Class to represent a graph edge
+    static class Edge {
+        int source;
+        int target;
+        int weight;
+
+        public Edge(int source, int target, int weight) {
+            this.source = source;
+            this.target = target;
+            this.weight = weight;
+        }
+    }
+
+    // Class to represent a graph
+    static class Graph {
+        int vertices;
+        LinkedList<Edge>[] adjacencyList;
+
+        public Graph(int vertices) {
+            this.vertices = vertices;
+            adjacencyList = new LinkedList[vertices];
+            for (int i = 0; i < vertices; i++) {
+                adjacencyList[i] = new LinkedList<>();
+            }
+        }
+
+        // Add an edge to the graph
+        public void addEdge(int source, int target, int weight) {
+            adjacencyList[source].add(new Edge(source, target, weight));
+            adjacencyList[target].add(new Edge(target, source, weight)); // For undirected graph
+        }
+    }
+
+    // Function to implement Prim's Algorithm
+    public static void primMST(Graph graph) {
+        int vertices = graph.vertices;
+        boolean[] inMST = new boolean[vertices]; // Track vertices included in MST
+        int[] parent = new int[vertices]; // Store the MST
+        int[] key = new int[vertices]; // Key values to pick the minimum weight edge
+
+        // Initialize keys to infinity and inMST to false
+        Arrays.fill(key, Integer.MAX_VALUE);
+        key[0] = 0; // Start with the first vertex
+        parent[0] = -1; // Root of the MST
+
+        // Priority queue to store vertices based on their key values
+        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingInt(e -> e.weight));
+        pq.add(new Edge(-1, 0, 0)); // Add the source vertex
+
+        while (!pq.isEmpty()) {
+            Edge minEdge = pq.poll(); // Get the vertex with the smallest key
+            int u = minEdge.target;
+
+            // If the vertex is already in the MST, skip it
+            if (inMST[u]) {
+                continue;
+            }
+
+            inMST[u] = true; // Add the vertex to the MST
+
+            // Relax all adjacent edges
+            for (Edge edge : graph.adjacencyList[u]) {
+                int v = edge.target;
+                int weight = edge.weight;
+
+                if (!inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    parent[v] = u;
+                    pq.add(new Edge(u, v, key[v]));
+                }
+            }
+        }
+
+        // Print the MST
+        printMST(parent, graph);
+    }
+
+    // Function to print the MST
+    private static void printMST(int[] parent, Graph graph) {
+        System.out.println("Minimum Spanning Tree:");
+        for (int i = 1; i < graph.vertices; i++) {
+            System.out.println("Edge: " + parent[i] + " - " + i + " | Weight: " + getWeight(parent[i], i, graph));
+        }
+    }
+
+    // Function to get the weight of an edge
+    private static int getWeight(int u, int v, Graph graph) {
+        for (Edge edge : graph.adjacencyList[u]) {
+            if (edge.target == v) {
+                return edge.weight;
+            }
+        }
+        return -1; // Edge not found
+    }
+
+    // Main method to test the implementation
+    public static void main(String[] args) {
+        int vertices = 5;
+        Graph graph = new Graph(vertices);
+
+        // Add edges to the graph
+        graph.addEdge(0, 1, 2);
+        graph.addEdge(0, 3, 6);
+        graph.addEdge(1, 2, 3);
+        graph.addEdge(1, 3, 8);
+        graph.addEdge(1, 4, 5);
+        graph.addEdge(2, 4, 7);
+        graph.addEdge(3, 4, 9);
+
+        // Run Prim's Algorithm
+        primMST(graph);
+    }
+}
